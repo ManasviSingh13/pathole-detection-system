@@ -1,11 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  DeployCustomYOLOModelInput,
-  deployCustomYOLOModel,
-  DeployCustomYOLOModelOutput,
-} from '@/ai/flows/deploy-custom-yolo-models';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +25,27 @@ import { useState } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Rocket, Terminal, CheckCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+
+// Mock data types from the removed AI flow
+export type DeployCustomYOLOModelInput = z.infer<typeof formSchema>;
+
+export interface DeployCustomYOLOModelOutput {
+  deploymentStatus: string;
+  evaluationSummary: string;
+}
+
+// Mock function to simulate AI flow
+async function deployCustomYOLOModel(
+  input: DeployCustomYOLOModelInput
+): Promise<DeployCustomYOLOModelOutput> {
+  console.log('Simulating model deployment with input:', input);
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  return {
+    deploymentStatus: `Model ${input.modelName} deployment is pending. The model will be deployed from ${input.modelUri}.`,
+    evaluationSummary: `The YOLO model evaluation is pending. Further details on performance will be provided upon deployment.\nModel Description: ${input.modelDescription}`,
+  };
+}
+
 
 const formSchema = z.object({
   modelName: z.string().min(3, 'Model name must be at least 3 characters.'),

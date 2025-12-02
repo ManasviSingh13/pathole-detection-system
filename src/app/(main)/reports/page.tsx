@@ -1,13 +1,43 @@
 'use client';
 
 import { useState } from 'react';
-import { summarizePotholeDetections } from '@/ai/flows/summarize-pothole-detections';
-import { suggestImprovementActions } from '@/ai/flows/suggest-improvement-actions';
 import { mockDetections } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Wand2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+
+
+// Mock SummarizePotholeDetections
+async function summarizePotholeDetections(input: { potholeData: string }): Promise<{ summary: string }> {
+  console.log('Simulating pothole detection summarization...');
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  const detections = JSON.parse(input.potholeData);
+  const totalDetections = detections.reduce((acc: number, curr: any) => acc + curr.detections.length, 0);
+  const highSeverityCount = detections.flatMap((d: any) => d.detections).filter((p: any) => p.confidence > 0.9).length;
+
+  return {
+    summary: `Analysis of ${detections.length} images complete. A total of ${totalDetections} potholes were detected. Of these, ${highSeverityCount} are classified as high severity and require immediate attention. The primary concentration of high-severity potholes is located in the downtown area, particularly around Main Street.`,
+  };
+}
+
+// Mock suggestImprovementActions
+async function suggestImprovementActions(input: { potholeDetectionSummary: string }): Promise<{
+  suggestedActions: string;
+  resourceAllocation: string;
+}> {
+  console.log('Simulating improvement suggestions...');
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  return {
+    suggestedActions: `1. **Immediate Action:** Dispatch a rapid repair crew to address the ${mockDetections.flatMap(d => d.detections).filter(d => d.confidence > 0.9).length} high-severity potholes identified on Main Street.
+2. **Short-Term (1-2 weeks):** Conduct a full survey of the downtown area to identify other potential hazards.
+3. **Long-Term (3-6 months):** Schedule a full resurfacing project for Main Street and surrounding roads based on the comprehensive survey.`,
+    resourceAllocation: `1. **Rapid Repair Crew:** Allocate one truck and a two-person crew for immediate dispatch. Estimated time: 8-10 hours.
+2. **Survey Team:** Assign one surveyor with a mapping device. Estimated time: 3 days.
+3. **Resurfacing Project:** Requires capital budget approval. Plan for a 4-week project with a full paving crew and equipment.`,
+  };
+}
+
 
 export default function ReportsPage() {
   const [loading, setLoading] = useState(false);
