@@ -59,21 +59,18 @@ export function SideNav() {
         <SidebarMenu>
           {links.map((link) => (
             <SidebarMenuItem key={link.href}>
-              <Link href={link.href} legacyBehavior passHref>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === link.href}
-                  tooltip={{
-                    children: link.label,
-                    className: 'bg-sidebar-background text-sidebar-foreground',
-                  }}
-                >
-                  <a>
-                    <link.icon />
-                    <span>{link.label}</span>
-                  </a>
-                </SidebarMenuButton>
-              </Link>
+              <SidebarMenuButton
+                as={Link}
+                href={link.href}
+                isActive={pathname === link.href}
+                tooltip={{
+                  children: link.label,
+                  className: 'bg-sidebar-background text-sidebar-foreground',
+                }}
+              >
+                <link.icon />
+                <span>{link.label}</span>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
