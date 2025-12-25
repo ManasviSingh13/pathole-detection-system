@@ -70,3 +70,7 @@ The **Pothole Detection System** is a Computer Vision–based project designed t
 
 **Krishankant Dixit**
 B.Tech CSE | AI & ML Enthusiast
+
+
+### NOTE:-This project is for learning and demonstration purposes.
+
