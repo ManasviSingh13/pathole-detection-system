@@ -1,0 +1,25 @@
+[
+  {
+    "id": "POT-1779602502116",
+    "timestamp": 1779602502116,
+    "imageUrl": "https://placehold.co/600x400/png?text=New+Pothole",
+    "imageHint": "road pothole",
+    "location": {
+      "latitude": 25.31,
+      "longitude": 82.97
+    },
+    "pothole_probability": 0.93,
+    "detections": [
+      {
+        "label": "Pothole",
+        "confidence": 0.93,
+        "bbox": [
+          0.5,
+          0.5,
+          0.2,
+          0.2
+        ]
+      }
+    ]
+  }
+]

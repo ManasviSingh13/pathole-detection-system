@@ -1,6 +1,8 @@
 'use server';
 
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
+import { mockDetections } from '@/lib/data';
 
 const uploadSchema = z.object({
   image: z.any(),
@@ -8,7 +10,11 @@ const uploadSchema = z.object({
   longitude: z.string().optional(),
 });
 
-export async function uploadDetection(prevState: any, formData: FormData) {
+export async function uploadDetection(
+  prevState: any,
+  formData: FormData
+) {
+
   const validatedFields = uploadSchema.safeParse({
     image: formData.get('image'),
     latitude: formData.get('latitude'),
@@ -22,33 +28,52 @@ export async function uploadDetection(prevState: any, formData: FormData) {
     };
   }
 
-  const { image } = validatedFields.data;
+  const file = validatedFields.data.image;
 
-  if (!image || image.size === 0) {
+  if (!file || file.size === 0) {
     return {
-      message: 'Image is required.',
+      message: 'Please upload image.',
       success: false,
     };
   }
-  
-  // In a real application, you would do the following:
-  // 1. Upload the image file to Google Cloud Storage.
-  // const imageUrl = await uploadToGCS(image);
-  
-  // 2. Run the YOLO detection model on the image.
-  // This could be a call to a Cloud Function or another microservice.
-  // const detectionResult = await runPotholeDetection(imageUrl);
 
-  // 3. Save the detection results to Firestore.
-  // await saveToFirestore({ ...detectionResult, ...validatedFields.data });
+  const newDetection = {
+    id: `POT-${Date.now()}`,
 
-  // For this demo, we'll simulate a successful upload and analysis.
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  
-  console.log('Simulating upload and analysis for:', validatedFields.data);
+    timestamp: Date.now(),
+
+    imageUrl:
+      "https://placehold.co/600x400/png?text=New+Pothole",
+
+    imageHint: 'road pothole',
+
+    location: {
+      latitude: Number(
+        validatedFields.data.latitude || 25.31
+      ),
+
+      longitude: Number(
+        validatedFields.data.longitude || 82.97
+      ),
+    },
+
+    pothole_probability: 0.93,
+
+    detections: [
+      {
+        label: 'pothole',
+        confidence: 0.93,
+        bbox: [0.5, 0.5, 0.2, 0.2],
+      },
+    ],
+  };
+
+  mockDetections.unshift(newDetection);
+
+  revalidatePath('/dashboard');
 
   return {
-    message: 'Image successfully uploaded and queued for analysis.',
+    message: 'Detection Added Successfully',
     success: true,
   };
 }
